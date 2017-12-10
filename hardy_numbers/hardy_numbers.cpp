@@ -28,25 +28,25 @@ uint64_t calculate(uint64_t base1, uint64_t base2)
 
 int main(const int argc, const char **argv)
 {
-	vector<uint64_t> harman_numbers_{ 1729, 4104, 20683, 39312, 40033, 64232, 65728 };
+	vector<uint64_t> harman_numbers{ 1729, 4104, 20683, 39312, 40033, 64232, 65728 };
 	vector<result_tuple_t> results_success;
 	vector<result_tuple_t> results_failure;
 	bool print_not_a_harman_number = true;
 
 	if (argc == 2) {// one number
-		harman_numbers_.clear();
-		harman_numbers_.emplace_back(atoi(argv[1]));
+		harman_numbers.clear();
+		harman_numbers.emplace_back(atoi(argv[1]));
 	}
 	else if (argc == 3) {// rang of numbers  
 		print_not_a_harman_number = false;
 		uint64_t lower_number = atoi(argv[1]);
 		uint64_t upper_number = atoi(argv[2]);
-		harman_numbers_.clear();
-		harman_numbers_.resize(upper_number - lower_number + 1);
-		std::generate(harman_numbers_.begin(), harman_numbers_.end(), [&lower_number] {return lower_number++; });
+		harman_numbers.clear();
+		harman_numbers.resize(upper_number - lower_number + 1);
+		std::generate(harman_numbers.begin(), harman_numbers.end(), [&lower_number] {return lower_number++; });
 	}
 
-	for (const auto& harman_number : harman_numbers_) {
+	for (const auto& harman_number : harman_numbers) {
 		bool found_first = false;
 		bool found_second = false;
 		size_t max_base1 = std::cbrt(harman_number / 2) + 1;
