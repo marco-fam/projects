@@ -55,19 +55,12 @@ auto parse_args(const int argc, const char **argv)
     if(argc == 1) {
         throw std::invalid_argument("Too few arguments!");
     } else if (argc == 2) {
-        /// Based on command line inputs the program options are created
         return make_tuple_from_args(argv[1], 10, 10);
-        /// 10, 10uple<string, int, int> = (table_layout, rows, cols)
-        /// return tupletring, int, int> = 
     } else if (argc == 4) {
-        /// Based on command line inputs the program options are created
         return make_tuple_from_args(argv[1], atoi(argv[2]), atoi(argv[3]));
-            /// 3])uple<string, int, int> = (table_layout, rows, cols)
-            /// return tupleng, int, int> = 
     } else {
         throw std::invalid_argument("Unsupported number of arguments!");
     }
-    /// Based on command line inputs the program options are created
     return make_tuple_from_args(string("illegal"), 0, 0);
 }
 
