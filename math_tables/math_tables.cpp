@@ -3,7 +3,6 @@
 // g++ -std=c++17 -Wall -Wpedantic -Wextra math_tables.cpp -g -o math_tables.exe
 //  
 
-#include <algorithm>
 #include <cmath>
 #include <cstdint>
 #include <iomanip>
@@ -11,8 +10,7 @@
 #include <stdexcept>
 #include <string>
 #include <tuple>
-#include <utility>
-#include <vector>
+
 
 using namespace std;
 
@@ -21,6 +19,8 @@ namespace {
 const string matrix("matrix");
 const string single("single");
 
+/// removes the program name from the path.
+/// return program_name as string
 string program_name(string program_name)
 {
     size_t pos = program_name.find_last_of("\\/");
@@ -28,44 +28,58 @@ string program_name(string program_name)
     return program_name;
 } 
 
+/// Outputs the help in case of invalid input arguments
 void help(const string & full_program_name)
 {
     cout << program_name(full_program_name) << " matrix 20 20, will print a matrix like math table of 20 x 20" << endl; 
     cout << program_name(full_program_name) << " single 20 10, will print a tables as individual rows of tables 20 with 10 numbers" << endl; 
 }
 
+/// Based on command line inputs the program options are transformed 
+/// into a tuple<string, int, int> = (table_layout, rows, cols)
+/// return tuple<string, int, int>
+auto make_tuple_from_args(string table_selection, int rows, int cols)
+{
+    if (table_selection.compare(matrix) == 0) {
+        return make_tuple(matrix, rows, cols);
+    } else if (table_selection.compare(single) == 0) {
+        return make_tuple(single, rows, cols);
+    } else {
+        throw std::invalid_argument("Illegal matrix or single argument!");
+    }
+}
+
+/// Transforms the arguments based on argc and argv
 auto parse_args(const int argc, const char **argv)
 {
     if(argc == 1) {
         throw std::invalid_argument("Too few arguments!");
     } else if (argc == 2) {
-        if (string(argv[1]).compare(matrix) == 0) {
-            return make_tuple(matrix,10,10);
-        } else if (string(argv[1]).compare(single) == 0) {
-            return make_tuple(single,10,10);
-        } else {
-            throw std::invalid_argument("Illegal matrix or single argument!");
-        }
+        /// Based on command line inputs the program options are created
+        return make_tuple_from_args(argv[1], 10, 10);
+        /// 10, 10uple<string, int, int> = (table_layout, rows, cols)
+        /// return tupletring, int, int> = 
     } else if (argc == 4) {
-        if (string(argv[1]).compare(matrix) == 0) {
-            return make_tuple(matrix, atoi(argv[2]), atoi(argv[3]));
-        } else if (string(argv[1]).compare(single) == 0) {
-            return make_tuple(single, atoi(argv[2]), atoi(argv[3]));
-        } else {
-            throw std::invalid_argument("Illegal matrix or single argument!");
-        }
+        /// Based on command line inputs the program options are created
+        return make_tuple_from_args(argv[1], atoi(argv[2]), atoi(argv[3]));
+            /// 3])uple<string, int, int> = (table_layout, rows, cols)
+            /// return tupleng, int, int> = 
     } else {
-        throw std::invalid_argument("Illegal number of arguments!");
+        throw std::invalid_argument("Unsupported number of arguments!");
     }
-    return make_tuple(string("illegal"),0,0);
+    /// Based on command line inputs the program options are created
+    return make_tuple_from_args(string("illegal"), 0, 0);
 }
 
+/// helper types for selection of print_table template overloads
 struct Single_layout{};
 struct Matrix_layout{};
 
+/// primary template for print_table. Note not implemented
 template <typename T>
 void print_table(int rows, int cols, T);
 
+/// function specialization for single_table layout
 template <>
 void print_table(int rows, int table, Single_layout) 
 {
@@ -77,6 +91,7 @@ void print_table(int rows, int table, Single_layout)
     }  
 }
 
+/// function specialization for matrix_table layout
 template <>
 void print_table(int rows, int cols, Matrix_layout) 
 {
@@ -93,6 +108,7 @@ void print_table(int rows, int cols, Matrix_layout)
     }
 }
 
+/// Function for selection of print_table layout. Either matrix or single layout
 void print_tables(tuple<string,int,int> const & table_layout)
 {
     string layout = get<string>(table_layout);
@@ -118,6 +134,7 @@ int main(const int argc, const char **argv)
         print_tables(table_layout);
 
     } catch (const std::exception& e) {
+        // indicate exception and call help
         cout << e.what() << endl;    
         help(argv[0]);
     }
