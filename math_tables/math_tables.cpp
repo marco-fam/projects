@@ -16,6 +16,10 @@ using namespace std;
 
 namespace {
 
+/// helper types for selection of print_table template overloads
+struct Single_layout{};
+struct Matrix_layout{};
+/// user inputs for selection of table layout
 const string matrix("matrix");
 const string single("single");
 
@@ -31,8 +35,8 @@ string program_name(string program_name)
 /// Outputs the help in case of invalid input arguments
 void help(const string & full_program_name)
 {
-    cout << program_name(full_program_name) << " matrix 20 20, will print a matrix like math table of 20 x 20" << endl; 
-    cout << program_name(full_program_name) << " single 20 10, will print a tables as individual rows of tables 20 with 10 numbers" << endl; 
+    cout << program_name(full_program_name) << " matrix 20 20, will print a matrix like math table of size 20 x 20" << endl; 
+    cout << program_name(full_program_name) << " single 20 10, will print the \"10\"-table with 20 rows" << endl; 
 }
 
 /// Based on command line inputs the program options are transformed 
@@ -52,21 +56,15 @@ auto make_tuple_from_args(string table_selection, int rows, int cols)
 /// Transforms the arguments based on argc and argv
 auto parse_args(const int argc, const char **argv)
 {
-    if(argc == 1) {
-        throw std::invalid_argument("Too few arguments!");
-    } else if (argc == 2) {
+    if (argc == 2) {
         return make_tuple_from_args(argv[1], 10, 10);
     } else if (argc == 4) {
         return make_tuple_from_args(argv[1], atoi(argv[2]), atoi(argv[3]));
     } else {
         throw std::invalid_argument("Unsupported number of arguments!");
+        return make_tuple_from_args(string("illegal"), 0, 0);
     }
-    return make_tuple_from_args(string("illegal"), 0, 0);
 }
-
-/// helper types for selection of print_table template overloads
-struct Single_layout{};
-struct Matrix_layout{};
 
 /// primary template for print_table. Note not implemented
 template <typename T>
@@ -88,11 +86,13 @@ void print_table(int rows, int table, Single_layout)
 template <>
 void print_table(int rows, int cols, Matrix_layout) 
 {
-    cout << std::setw(4) << " ";
+    // print header    
+    cout << std::setw(4) << "X";
     for (int i = 1 ;i <= cols; ++i) {
         cout << std::setw(3) << i << " ";
     }
 
+    // print the table
     for (int i = 1; i <= rows; ++i) {
         cout << endl << std::setw(3) << i << " ";
         for (int j = 1; j <= cols ; ++j) {
@@ -104,9 +104,7 @@ void print_table(int rows, int cols, Matrix_layout)
 /// Function for selection of print_table layout. Either matrix or single layout
 void print_tables(tuple<string,int,int> const & table_layout)
 {
-    string layout = get<string>(table_layout);
-    int rows = get<1>(table_layout);
-    int cols = get<2>(table_layout);
+    auto [layout, rows, cols] = table_layout;
 
     if (0==layout.compare(matrix)) {
         print_table(rows, cols, Matrix_layout());
