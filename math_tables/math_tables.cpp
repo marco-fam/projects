@@ -62,7 +62,6 @@ auto parse_args(const int argc, const char **argv)
         return make_tuple_from_args(argv[1], atoi(argv[2]), atoi(argv[3]));
     } else {
         throw std::invalid_argument("Unsupported number of arguments!");
-        return make_tuple_from_args(string("illegal"), 0, 0);
     }
 }
 
