@@ -16,7 +16,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceRoot}/math_tables/math_tables.exe",
-            "args": [],
+            "args": ["matrix","20","20"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
