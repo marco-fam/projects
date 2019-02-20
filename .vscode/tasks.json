@@ -4,9 +4,16 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "echo",
+            "label": "build math tables",
             "type": "shell",
-            "command": "echo Hello"
+            "command": "D:/MinGw/bin/g++.exe -std=c++17 -Wall -Wpedantic -Wextra \"${workspaceRoot}\\math_tables\\math_tables.cpp\" -g -o \"${workspaceRoot}\\math_tables\\math_tables.exe\"",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
         }
     ]
 }
